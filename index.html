@@ -999,7 +999,12 @@
   <section id="inicio" class="hero">
     <div class="container">
       <div class="hero-content">
-       
+        <div class="hero-badge">
+          <svg class="icon-sm" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M13 3c-4.97 0-9 4.03-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42C8.27 19.99 10.51 21 13 21c4.97 0 9-4.03 9-9s-4.03-9-9-9z"/>
+          </svg>
+          Automatización de Nueva Generación
+        </div>
         
         <h1 class="hero-title">Rescatamos tu tiempo, automatizamos tu éxito</h1>
         
@@ -1774,6 +1779,19 @@ document.addEventListener('DOMContentLoaded', function() {
     return;
   }
 
+  // Función para sanear y formatear teléfono
+  function formatearTelefono(raw) {
+    // 1) Eliminar todo lo que no sea dígito
+    let dígitos = raw.replace(/\D+/g, '');
+    // 2) Quitar ceros a la izquierda
+    dígitos = dígitos.replace(/^0+/, '');
+    // 3) Anteponer '57' si no está
+    if (!dígitos.startsWith('57')) {
+      dígitos = '57' + dígitos;
+    }
+    return dígitos;
+  }
+
   // Abrir modal cuando se haga clic en el botón
   btnConsultoria.addEventListener('click', function(e) {
     e.preventDefault();
@@ -1794,25 +1812,6 @@ document.addEventListener('DOMContentLoaded', function() {
       document.body.style.overflow = 'auto';
     }
   });
-document.addEventListener('DOMContentLoaded', function() {
-  const form = document.getElementById('contactForm');
-  const modal = document.getElementById('contactModal');
-
-  // Función para sanear y formatear teléfono
-  function formatearTelefono(raw) {
-    // 1) Eliminar todo lo que no sea dígito
-    let dígitos = raw.replace(/\D+/g, '');
-
-    // 2) Quitar ceros a la izquierda
-    dígitos = dígitos.replace(/^0+/, '');
-
-    // 3) Si ya empieza con '57' lo dejamos, si no, lo agregamos
-    if (!dígitos.startsWith('57')) {
-      dígitos = '57' + dígitos;
-    }
-
-    return dígitos;
-  }
 
   // Manejar envío del formulario
   form.addEventListener('submit', function(e) {
@@ -1822,8 +1821,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const datos = new FormData(form);
     const objeto = {};
     datos.forEach((valor, clave) => {
-      if (clave.toLowerCase().includes('tel') || clave.toLowerCase().includes('phone')) {
-        // Sanear y formatear el campo de teléfono
+      // Detectar campos de teléfono por nombre
+      if (/tel|phone/i.test(clave)) {
         objeto[clave] = formatearTelefono(valor);
       } else {
         objeto[clave] = valor;
@@ -1874,5 +1873,6 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 });
 </script>
+
 </body>
 </html>
