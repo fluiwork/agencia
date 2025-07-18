@@ -1794,6 +1794,25 @@ document.addEventListener('DOMContentLoaded', function() {
       document.body.style.overflow = 'auto';
     }
   });
+document.addEventListener('DOMContentLoaded', function() {
+  const form = document.getElementById('contactForm');
+  const modal = document.getElementById('contactModal');
+
+  // Función para sanear y formatear teléfono
+  function formatearTelefono(raw) {
+    // 1) Eliminar todo lo que no sea dígito
+    let dígitos = raw.replace(/\D+/g, '');
+
+    // 2) Quitar ceros a la izquierda
+    dígitos = dígitos.replace(/^0+/, '');
+
+    // 3) Si ya empieza con '57' lo dejamos, si no, lo agregamos
+    if (!dígitos.startsWith('57')) {
+      dígitos = '57' + dígitos;
+    }
+
+    return dígitos;
+  }
 
   // Manejar envío del formulario
   form.addEventListener('submit', function(e) {
@@ -1803,11 +1822,16 @@ document.addEventListener('DOMContentLoaded', function() {
     const datos = new FormData(form);
     const objeto = {};
     datos.forEach((valor, clave) => {
-      objeto[clave] = valor;
+      if (clave.toLowerCase().includes('tel') || clave.toLowerCase().includes('phone')) {
+        // Sanear y formatear el campo de teléfono
+        objeto[clave] = formatearTelefono(valor);
+      } else {
+        objeto[clave] = valor;
+      }
     });
     
     // Deshabilitar botón durante el envío
-    const submitBtn = document.getElementById('contactForm').querySelector('.btn-submit');
+    const submitBtn = form.querySelector('.btn-submit');
     const originalText = submitBtn.textContent;
     submitBtn.textContent = 'Enviando...';
     submitBtn.disabled = true;
